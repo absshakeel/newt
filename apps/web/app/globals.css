@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gtour-surface: #fdfbf7;
+    --gtour-surface-muted: #f8f3ea;
+    --gtour-line: #efe6d8;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-sand-50 text-ink-900 antialiased;
+  }
+
+  /* Visible, non-obtrusive focus treatment for every interactive element. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    @apply outline-none ring-2 ring-sea-500 ring-offset-2 ring-offset-sand-50;
+  }
+
+  ::selection {
+    @apply bg-sea-200 text-ink-900;
+  }
+}
+
+@layer components {
+  .gtour-container {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  .gtour-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.22em] text-sea-600;
+  }
+
+  .gtour-section {
+    @apply flex min-h-[100svh] flex-col justify-center py-16 sm:py-20 lg:py-24;
+  }
+
+  /* Media wrapper that keeps a stable aspect ratio and crops consistently. */
+  .gtour-media {
+    @apply relative overflow-hidden rounded-card bg-sand-200;
+  }
+
+  .gtour-skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100]
+      focus:rounded-pill focus:bg-ink-900 focus:px-5 focus:py-2 focus:text-sm focus:font-semibold
+      focus:text-sand-50;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Scroll reveal: elements start hidden and settle once observed. */
+  .gtour-reveal {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .gtour-reveal[data-revealed='true'] {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .gtour-route-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    pathLength: 1;
+  }
+
+  .gtour-route-path[data-revealed='true'] {
+    animation: draw-route 3.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+
+  .gtour-scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .gtour-scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes gtour-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) scale(1.02);
+  }
+}
+@keyframes gtour-float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(12px, -18px, 0);
+  }
+}
+@keyframes gtour-drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-18px, 10px, 0) rotate(6deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+@keyframes gtour-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes gtour-fade-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes gtour-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes gtour-orbit {
+  0% {
+    transform: rotate(0deg) translateX(8px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(8px) rotate(-360deg);
+  }
+}
+
+/* Reduced-motion: keep content visible and drop all non-essential movement. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .gtour-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .gtour-route-path {
+    stroke-dashoffset: 0;
+  }
+}

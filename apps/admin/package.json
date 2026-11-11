@@ -1,0 +1,52 @@
+{
+    "name":  "gtour-admin",
+    "version":  "1.0.0",
+    "private":  true,
+    "scripts":  {
+                    "dev":  "next dev -p 3001",
+                    "build":  "next build",
+                    "start":  "next start -p 3001",
+                    "lint":  "eslint .",
+                    "typecheck":  "tsc --noEmit",
+                    "test":  "jest --runInBand --passWithNoTests",
+                    "test:watch":  "jest --watch",
+                    "test:coverage":  "jest --coverage --runInBand --passWithNoTests",
+                    "e2e":  "playwright test",
+                    "clean":  "rimraf .next coverage"
+                },
+    "dependencies":  {
+                         "@gtour/shared-types":  "workspace:*",
+                         "@gtour/ui":  "workspace:*",
+                         "@gtour/utils":  "workspace:*",
+                         "@gtour/validation":  "workspace:*",
+                         "@tanstack/react-table":  "8.21.3",
+                         "axios":  "^1.7.0",
+                         "clsx":  "^2.1.0",
+                         "lucide-react":  "^0.468.0",
+                         "next":  "^16.0.0",
+                         "react":  "^19.0.0",
+                         "react-dom":  "^19.0.0",
+                         "tailwind-merge":  "^2.5.0",
+                         "zustand":  "^5.0.0"
+                     },
+    "devDependencies":  {
+                            "@playwright/test":  "^1.49.0",
+                            "@testing-library/jest-dom":  "^6.6.3",
+                            "@testing-library/react":  "^16.1.0",
+                            "@testing-library/user-event":  "^14.5.2",
+                            "@types/jest":  "^29.5.12",
+                            "@types/node":  "^22.0.0",
+                            "@types/react":  "^19.0.0",
+                            "@types/react-dom":  "^19.0.0",
+                            "autoprefixer":  "^10.4.20",
+                            "eslint":  "^9.15.0",
+                            "eslint-config-next":  "^16.0.0",
+                            "identity-obj-proxy":  "^3.0.0",
+                            "jest":  "^29.7.0",
+                            "jest-environment-jsdom":  "^29.7.0",
+                            "postcss":  "^8.4.49",
+                            "tailwindcss":  "^3.4.15",
+                            "ts-jest":  "^29.2.5",
+                            "typescript":  "^5.7.0"
+                        }
+}

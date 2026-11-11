@@ -1,0 +1,53 @@
+{
+  "name": "gtour",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "description": "Global Tourism Platform - unified destination discovery, tourism services, and bookings",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "dev:web": "pnpm --filter gtour-web dev",
+    "dev:admin": "pnpm --filter gtour-admin dev",
+    "dev:api": "pnpm --filter gtour-api dev",
+    "build": "turbo run build",
+    "build:web": "pnpm --filter gtour-web build",
+    "build:api": "pnpm --filter gtour-api build",
+    "lint": "turbo run lint",
+    "lint:web": "pnpm --filter gtour-web lint",
+    "lint:api": "pnpm --filter gtour-api lint",
+    "test": "turbo run test",
+    "test:web": "pnpm --filter gtour-web test",
+    "test:api": "pnpm --filter gtour-api test",
+    "test:watch": "turbo run test:watch --parallel",
+    "test:coverage": "turbo run test:coverage",
+    "test:e2e": "pnpm --filter gtour-web exec playwright test",
+    "typecheck": "turbo run typecheck",
+    "typecheck:web": "pnpm --filter gtour-web typecheck",
+    "typecheck:api": "pnpm --filter gtour-api typecheck",
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,tsx,json,md}\"",
+    "clean": "turbo run clean && rimraf .turbo node_modules/.cache"
+  },
+  "keywords": [
+    "tourism",
+    "travel",
+    "booking",
+    "monorepo"
+  ],
+  "author": "SE331 Group 03",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.11.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "rimraf": "^5.0.0",
+    "sharp": "^0.35.5",
+    "turbo": "^2.0.0"
+  }
+}
