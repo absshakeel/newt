@@ -131,6 +131,8 @@ pnpm clean
 
 ## Troubleshooting
 
+- **`Cannot find module '.../packages/shared-types/dist/index.js'`:** the shared workspace packages are compiled to `dist/` before the API starts. `pnpm dev` / `pnpm dev:api` build them automatically (Turbo's `dev` task depends on `^build`), so just re-run the dev command. If you invoke `ts-node-dev` directly, build them first with `pnpm --filter @gtour/shared-types build && pnpm --filter @gtour/validation build` (or use `pnpm --filter gtour-api dev`, which does it for you).
+- **`Port 5000 is already in use`:** macOS AirPlay Receiver (ControlCenter) listens on port 5000. Either turn off *System Settings → General → AirDrop & Handoff → AirPlay Receiver*, or set a free port in root `.env` (e.g. `PORT=5051`) and point the frontends at it with `NEXT_PUBLIC_API_URL=http://localhost:5051/api/v1` in `apps/web/.env.local` and `apps/admin/.env.local`.
 - **CORS error from admin (`localhost:3001`) to API:** ensure `ADMIN_URL=http://localhost:3001` (or include it in `CORS_ORIGINS`) in root `.env` and restart the API.
 - **404 for an API/image URL:** verify `NEXT_PUBLIC_API_URL` points to the running API (`/api/v1`), the API is started, and (for images) `R2_PUBLIC_URL`/bucket public access is configured correctly.
 - **`chext_driver.js` / “Permissions policy violation: unload…” in console:** typically emitted by a browser extension, not by this app; try an incognito window without extensions to confirm.

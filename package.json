@@ -12,7 +12,7 @@
     "dev": "turbo run dev --parallel",
     "dev:web": "pnpm --filter gtour-web dev",
     "dev:admin": "pnpm --filter gtour-admin dev",
-    "dev:api": "pnpm --filter gtour-api dev",
+    "dev:api": "turbo run dev --filter=gtour-api...",
     "build": "turbo run build",
     "build:web": "pnpm --filter gtour-web build",
     "build:api": "pnpm --filter gtour-api build",

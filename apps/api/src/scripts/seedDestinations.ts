@@ -1,27 +1,10 @@
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
 import mongoose from 'mongoose';
+import { loadEnv } from '../config/env';
 import Category from '../models/Category';
 import Location from '../models/Location';
 import Destination from '../models/Destination';
 
-function loadEnv() {
-  if (process.env.MONGODB_URI) return;
-  const candidates = [
-    path.resolve(process.cwd(), '.env'),
-    path.resolve(process.cwd(), '..', '.env'),
-    path.resolve(process.cwd(), '..', '..', '.env'),
-    path.resolve(__dirname, '../../../../.env'),
-  ];
-  for (const p of candidates) {
-    if (fs.existsSync(p)) {
-      dotenv.config({ path: p });
-      if (process.env.MONGODB_URI) return;
-    }
-  }
-  dotenv.config();
-}
+loadEnv();
 
 const categoriesData = [
   { name: 'Beach & Island', description: 'Sun, sand, turquoise waters, and island escapes.' },
@@ -160,7 +143,6 @@ const destinationsData: SeedDest[] = [
 ];
 
 async function main() {
-  loadEnv();
   const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/gtour';
   await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 15000 });
   console.log('Connected to MongoDB');

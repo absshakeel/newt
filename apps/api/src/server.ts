@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import path from 'path';
 import express, { type Express } from 'express';
 import cors from 'cors';
@@ -7,6 +6,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
+import { loadEnv } from './config/env';
 import { swaggerSpec } from './config/swagger';
 import { connectDB } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
@@ -25,8 +25,11 @@ import categoryRoutes from './routes/category.routes';
 import locationRoutes from './routes/location.routes';
 import uploadRoutes from './routes/upload.routes';
 
+// Load .env before reading any env var (PORT, CORS origins, ...).
+loadEnv();
+
 const app: Express = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 // Connect to MongoDB when running the server directly.
 if (process.env.NODE_ENV !== 'test') {
@@ -116,10 +119,24 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(errorHandler);
 
 // Start server when running directly.
+// Note: pass no callback to app.listen() — Express calls it on 'error' too,
+// which would print a bogus "Server running" message when the port is taken.
 if (require.main === module) {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT);
+
+  server.on('listening', () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+
+  server.on('error', (error: NodeJS.ErrnoException) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`❌ Port ${PORT} is already in use.`);
+      console.error('   Stop the process using it or set a different PORT in .env (e.g. PORT=5051).');
+    } else {
+      console.error('❌ Failed to start server:', error);
+    }
+    process.exit(1);
   });
 }
 

@@ -1,29 +1,8 @@
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import fs from 'fs';
-import path from 'path';
-
-function loadDatabaseEnv(): void {
-  if (process.env.MONGODB_URI) return;
-
-  const candidates = [
-    path.resolve(process.cwd(), '.env'),
-    path.resolve(process.cwd(), '..', '.env'),
-    path.resolve(process.cwd(), '..', '..', '.env'),
-  ];
-
-  for (const envPath of candidates) {
-    if (fs.existsSync(envPath)) {
-      dotenv.config({ path: envPath });
-      if (process.env.MONGODB_URI) return;
-    }
-  }
-
-  dotenv.config();
-}
+import { loadEnv } from './env';
 
 export const connectDB = async (): Promise<void> => {
-  loadDatabaseEnv();
+  loadEnv();
 
   const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/gtour';
   const usingFallback = !process.env.MONGODB_URI;
