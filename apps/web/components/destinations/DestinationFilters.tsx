@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Button } from '@gtour/ui';
 import { Field, Input, Select } from '@gtour/ui';
 import type { PopulatedCategory, PopulatedLocation } from '@gtour/utils';
@@ -40,6 +40,14 @@ export default function DestinationFilters({
   const [categoryId, setCategoryId] = useState(values.categoryId);
   const [locationId, setLocationId] = useState(values.locationId);
   const [sort, setSort] = useState(values.sort);
+
+  // Keep form controls in sync when URL/search params change (navigation, clear, back/forward).
+  useEffect(() => {
+    setSearch(values.search);
+    setCategoryId(values.categoryId);
+    setLocationId(values.locationId);
+    setSort(values.sort);
+  }, [values.search, values.categoryId, values.locationId, values.sort]);
 
   function buildUrl(overrides: Partial<DestinationFilterValues> = {}) {
     const next = { search, categoryId, locationId, sort, ...overrides };

@@ -97,15 +97,26 @@ export default async function DestinationsPage({
           {!result.ok ? (
             <ErrorState title="Destinations are unavailable" description={result.message} />
           ) : destinations.length === 0 ? (
-            <EmptyState
-              title="No destinations match those filters"
-              description="Try a different travel style or region, or clear the filters to see everything we have published."
-              action={
-                <ButtonLink href="/destinations" variant="outline">
-                  Clear filters
-                </ButtonLink>
-              }
-            />
+            (() => {
+              const hasActiveFilters = Boolean(search || categoryId || locationId);
+              return (
+                <EmptyState
+                  title={hasActiveFilters ? 'No destinations match those filters' : 'No destinations published yet'}
+                  description={
+                    hasActiveFilters
+                      ? 'Try a different travel style or region, or clear the filters to see everything we have published.'
+                      : 'Once destinations are added and linked to categories and locations, they will appear here for travellers to explore.'
+                  }
+                  action={
+                    hasActiveFilters ? (
+                      <ButtonLink href="/destinations" variant="outline">
+                        Clear filters
+                      </ButtonLink>
+                    ) : undefined
+                  }
+                />
+              );
+            })()
           ) : (
             <Suspense fallback={<CardSkeletonGrid count={PAGE_SIZE} />}>
               <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

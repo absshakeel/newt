@@ -2,8 +2,15 @@ import Image from 'next/image';
 import HeroSearch from './HeroSearch';
 import { images } from '@/lib/images';
 import { ButtonLink } from '@gtour/ui';
+import type { PopulatedCategory, PopulatedLocation } from '@gtour/utils';
 
-export default function Hero() {
+export default function Hero({
+  categories = [],
+  locations = [],
+}: {
+  categories?: PopulatedCategory[];
+  locations?: PopulatedLocation[];
+}) {
   return (
     <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-ink-950 py-14 sm:py-16 lg:py-20">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -51,9 +58,9 @@ export default function Hero() {
             </div>
 
             <div className="mt-8 rounded-[1.5rem] border border-white/25 bg-white/95 p-3 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.55)] backdrop-blur-md sm:p-4 motion-safe:animate-[gtour-scale-in_900ms_120ms_cubic-bezier(0.22,1,0.36,1)_both]">
-              <HeroSearch />
+              <HeroSearch categories={categories} locations={locations} />
               <p className="mt-3 px-1 text-xs leading-relaxed text-ink-500">
-                Search by place or travel style — choose dates when you book a stay or service.
+                Search by place, travel style, or region to find destinations that match your plans.
               </p>
             </div>
           </div>

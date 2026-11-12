@@ -4,32 +4,31 @@ import { useRouter } from 'next/navigation';
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@gtour/ui';
 import { cn } from '@gtour/utils';
-
-const INTERESTS = [
-  { value: '', label: 'Any travel style' },
-  { value: 'nature', label: 'Nature & mountains' },
-  { value: 'beach', label: 'Beaches' },
-  { value: 'historical', label: 'Historical places' },
-  { value: 'adventure', label: 'Adventure' },
-  { value: 'culture', label: 'Cultural experiences' },
-  { value: 'city', label: 'City exploration' },
-] as const;
+import type { PopulatedCategory, PopulatedLocation } from '@gtour/utils';
 
 /**
- * Destination discovery search (Phase 16). No check-in/check-out/guests.
- * Routes to real `/destinations` results using the existing search API/filters.
+ * Destination discovery search. Routes to `/destinations` using real
+ * category/location filters (from API) plus free-text search.
  */
-export default function HeroSearch() {
+export default function HeroSearch({
+  categories = [],
+  locations = [],
+}: {
+  categories?: PopulatedCategory[];
+  locations?: PopulatedLocation[];
+}) {
   const router = useRouter();
   const fieldId = useId();
-  const [destination, setDestination] = useState('');
-  const [interest, setInterest] = useState('');
+  const [search, setSearch] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [locationId, setLocationId] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const params = new URLSearchParams();
-    if (destination.trim()) params.set('search', destination.trim());
-    if (interest) params.set('search', [destination.trim(), interest].filter(Boolean).join(' ').trim());
+    if (search.trim()) params.set('search', search.trim());
+    if (categoryId) params.set('category_id', categoryId);
+    if (locationId) params.set('location_id', locationId);
     const query = params.toString();
     router.push(`/destinations${query ? `?${query}` : ''}`);
   }
@@ -44,43 +43,64 @@ export default function HeroSearch() {
       aria-label="Search destinations"
       className="w-full rounded-panel border border-white/80 bg-white/96 p-3 shadow-panel ring-1 ring-ink-900/5 backdrop-blur-md sm:p-4"
     >
-      <div className="grid gap-2 sm:grid-cols-[1.4fr_1fr_auto] sm:items-end">
-        <div className="rounded-2xl border border-transparent px-3 py-2.5 transition-all duration-200 focus-within:border-sea-200 focus-within:bg-sea-50/40 hover:bg-sand-100/60">
-          <label htmlFor={`${fieldId}-destination`} className={label}>
-            Destination
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] sm:items-end">
+        <div className="rounded-2xl border border-transparent px-3 py-2.5 transition-all duration-200 focus-within:border-sea-200 focus-within:bg-sea-50/40 hover:bg-sand-100/60 sm:col-span-2 lg:col-span-1">
+          <label htmlFor={`${fieldId}-search`} className={label}>
+            Where to?
           </label>
           <input
-            id={`${fieldId}-destination`}
-            name="destination"
+            id={`${fieldId}-search`}
+            name="search"
             type="text"
-            value={destination}
-            onChange={(event) => setDestination(event.target.value)}
-            placeholder="Where would you love to go?"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search destinations, regions, ideas"
             autoComplete="off"
             className={control}
           />
         </div>
 
         <div className="rounded-2xl border border-transparent px-3 py-2.5 transition-all duration-200 focus-within:border-sea-200 focus-within:bg-sea-50/40 hover:bg-sand-100/60">
-          <label htmlFor={`${fieldId}-interest`} className={label}>
+          <label htmlFor={`${fieldId}-category`} className={label}>
             Travel style
           </label>
           <select
-            id={`${fieldId}-interest`}
-            name="interest"
-            value={interest}
-            onChange={(event) => setInterest(event.target.value)}
+            id={`${fieldId}-category`}
+            name="category_id"
+            value={categoryId}
+            onChange={(event) => setCategoryId(event.target.value)}
             className={cn(control, 'cursor-pointer')}
           >
-            {INTERESTS.map((option) => (
-              <option key={option.value || 'any'} value={option.value}>
-                {option.label}
+            <option value="">All styles</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
               </option>
             ))}
           </select>
         </div>
 
-        <Button type="submit" size="lg" className="h-[52px] w-full justify-center sm:min-w-[132px]">
+        <div className="rounded-2xl border border-transparent px-3 py-2.5 transition-all duration-200 focus-within:border-sea-200 focus-within:bg-sea-50/40 hover:bg-sand-100/60">
+          <label htmlFor={`${fieldId}-location`} className={label}>
+            Region
+          </label>
+          <select
+            id={`${fieldId}-location`}
+            name="location_id"
+            value={locationId}
+            onChange={(event) => setLocationId(event.target.value)}
+            className={cn(control, 'cursor-pointer')}
+          >
+            <option value="">All regions</option>
+            {locations.map((location) => (
+              <option key={location._id} value={location._id}>
+                {[location.name, location.country].filter(Boolean).join(', ')}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <Button type="submit" size="lg" className="h-[52px] w-full justify-center sm:col-span-2 lg:col-span-1 lg:min-w-[132px]">
           Search
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 stroke-current" fill="none" strokeWidth="2.2" strokeLinecap="round">
             <circle cx="11" cy="11" r="7" />
